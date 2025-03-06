@@ -18,13 +18,18 @@ public class MovieService {
     @Value("${tmdb.api.base-url}")
     private String baseUrl;
 
+    private URI buildUri(String route){
+        URI uri = UriComponentsBuilder.fromUriString(baseUrl + route)
+                .queryParam("api_key", apiKey)
+                .build()
+                .toUri();;
+        return uri;
+    }
+
     public ResponseEntity<Object> getTrendingMovies() {
         RestTemplate restTemplate = new RestTemplate();
 
-        URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl + "/trending/movie/week")
-                .queryParam("api_key", apiKey)
-                .build()
-                .toUri();
+        URI uri = buildUri("/trending/movie/week");
 
         try {
             // Get response as a Map (which will be serialized to JSON automatically)
@@ -34,6 +39,21 @@ public class MovieService {
         } catch (RestClientException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to fetch data from TMDb"));
+        }
+    }
+
+    public ResponseEntity<Object> getTrendingShows(){
+        RestTemplate restTemplate = new RestTemplate();
+
+        URI uri = buildUri("/trending/tv/week");
+
+        try {
+            Map<String, Object> response = restTemplate.getForObject(uri, Map.class);
+            return ResponseEntity.ok(response);
+        }
+        catch (RestClientException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to fetch data from TMDB"));
         }
     }
 }

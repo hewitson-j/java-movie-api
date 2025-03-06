@@ -28,4 +28,9 @@ public class RoutesController {
     public ResponseEntity<Object> getTrendingMovies(){
         return movieService.getTrendingMovies();
     }
+
+    @GetMapping("/trending/tv")
+    public ResponseEntity<Object> getTrendingTv(){
+        return movieService.getTrendingShows();
+    }
 }
