@@ -1,6 +1,7 @@
 package com.hewitson_j.movie_backend.java_movie_api.services;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -39,6 +40,7 @@ public class MovieService {
                 .toUri();
     }
 
+    @Cacheable("trendingMovies")
     public ResponseEntity<Object> getTrendingMovies() {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -55,6 +57,7 @@ public class MovieService {
         }
     }
 
+    @Cacheable("trendingShows")
     public ResponseEntity<Object> getTrendingShows(){
         RestTemplate restTemplate = new RestTemplate();
 
@@ -70,6 +73,7 @@ public class MovieService {
         }
     }
 
+    @Cacheable("searchMoviesById")
     public ResponseEntity<Object> getSearchMoviesById(String id){
         RestTemplate restTemplate = new RestTemplate();
 
@@ -85,6 +89,7 @@ public class MovieService {
         }
     }
 
+    @Cacheable("searchTvById")
     public ResponseEntity<Object> getSearchTvById(String id){
         RestTemplate restTemplate = new RestTemplate();
 
@@ -100,6 +105,7 @@ public class MovieService {
         }
     }
 
+    @Cacheable("searchMoviesByTitle")
     public ResponseEntity<Object> getSearchMovieByTitle(String title){
         RestTemplate restTemplate = new RestTemplate();
 
@@ -115,6 +121,7 @@ public class MovieService {
         }
     }
 
+    @Cacheable("searchTvByTitle")
     public ResponseEntity<Object> getSearchTvByTitle(String title){
         RestTemplate restTemplate = new RestTemplate();
 

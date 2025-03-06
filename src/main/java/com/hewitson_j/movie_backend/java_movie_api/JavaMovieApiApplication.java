@@ -2,10 +2,12 @@ package com.hewitson_j.movie_backend.java_movie_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
 @SpringBootApplication
+@EnableCaching
 public class JavaMovieApiApplication {
 
 	public static void main(String[] args) {
