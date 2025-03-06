@@ -3,10 +3,7 @@ package com.hewitson_j.movie_backend.java_movie_api.controllers;
 import com.hewitson_j.movie_backend.java_movie_api.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/movies")
@@ -43,5 +40,15 @@ public class RoutesController {
     @GetMapping("/search/tv/{id}")
     public ResponseEntity<Object> searchTvById(@PathVariable("id") String id){
         return movieService.getSearchTvById(id);
+    }
+
+    @GetMapping("/search/movies")
+    public ResponseEntity<Object> searchMoviesByTitle(@RequestParam("title") String title){;
+        return movieService.getSearchMovieByTitle(title);
+    }
+
+    @GetMapping("/search/tv")
+    public ResponseEntity<Object> searchTvByTitle(@RequestParam("title") String title){;
+        return movieService.getSearchTvByTitle(title);
     }
 }
