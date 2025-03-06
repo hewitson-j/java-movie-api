@@ -4,6 +4,7 @@ import com.hewitson_j.movie_backend.java_movie_api.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +16,7 @@ public class RoutesController {
     private MovieService movieService;
 
     @GetMapping("/")
-    public String homeRoute(){
+    public String entryRoute(){
         return "Welcome to the Movie API! Use /movies/search, /movies/trending/tv, /movies/trending/movie, /movies/search/tv/:id, or /movies/search/movie/:id to get started.";
     }
 
@@ -32,5 +33,15 @@ public class RoutesController {
     @GetMapping("/trending/tv")
     public ResponseEntity<Object> getTrendingTv(){
         return movieService.getTrendingShows();
+    }
+
+    @GetMapping("/search/movie/{id}")
+    public ResponseEntity<Object> searchMovieById(@PathVariable("id") String id){
+        return movieService.getSearchMoviesById(id);
+    }
+
+    @GetMapping("/search/tv/{id}")
+    public ResponseEntity<Object> searchTvById(@PathVariable("id") String id){
+        return movieService.getSearchTvById(id);
     }
 }

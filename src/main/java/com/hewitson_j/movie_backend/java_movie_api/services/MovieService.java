@@ -18,18 +18,24 @@ public class MovieService {
     @Value("${tmdb.api.base-url}")
     private String baseUrl;
 
-    private URI buildUri(String route){
-        URI uri = UriComponentsBuilder.fromUriString(baseUrl + route)
+    private URI buildTrendingURI(String route){
+        return UriComponentsBuilder.fromUriString(baseUrl + route)
                 .queryParam("api_key", apiKey)
                 .build()
-                .toUri();;
-        return uri;
+                .toUri();
+    }
+
+    private URI buildSearchByIdURI(String route, String id){
+        return UriComponentsBuilder.fromUriString(baseUrl + route + id)
+                .queryParam("api_key", apiKey)
+                .build()
+                .toUri();
     }
 
     public ResponseEntity<Object> getTrendingMovies() {
         RestTemplate restTemplate = new RestTemplate();
 
-        URI uri = buildUri("/trending/movie/week");
+        URI uri = buildTrendingURI("/trending/movie/week");
 
         try {
             // Get response as a Map (which will be serialized to JSON automatically)
@@ -45,7 +51,7 @@ public class MovieService {
     public ResponseEntity<Object> getTrendingShows(){
         RestTemplate restTemplate = new RestTemplate();
 
-        URI uri = buildUri("/trending/tv/week");
+        URI uri = buildTrendingURI("/trending/tv/week");
 
         try {
             Map<String, Object> response = restTemplate.getForObject(uri, Map.class);
@@ -53,7 +59,37 @@ public class MovieService {
         }
         catch (RestClientException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch data from TMDB"));
+                    .body(Map.of("error", "Failed to fetch data from TMDb"));
+        }
+    }
+
+    public ResponseEntity<Object> getSearchMoviesById(String id){
+        RestTemplate restTemplate = new RestTemplate();
+
+        URI uri = buildSearchByIdURI("/movie/", id);
+
+        try  {
+            Map<String, Object> response = restTemplate.getForObject(uri, Map.class);
+            return ResponseEntity.ok(response);
+        }
+        catch (RestClientException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to fetch data for Movie " + id + " from TMDb"));
+        }
+    }
+
+    public ResponseEntity<Object> getSearchTvById(String id){
+        RestTemplate restTemplate = new RestTemplate();
+
+        URI uri = buildSearchByIdURI("/tv/", id);
+
+        try  {
+            Map<String, Object> response = restTemplate.getForObject(uri, Map.class);
+            return ResponseEntity.ok(response);
+        }
+        catch (RestClientException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to fetch data for TV " + id + " from TMDb"));
         }
     }
 }
