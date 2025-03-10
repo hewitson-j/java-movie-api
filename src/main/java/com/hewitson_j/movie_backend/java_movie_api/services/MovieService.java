@@ -19,8 +19,8 @@ public class MovieService {
     @Value("${tmdb.api.base-url}")
     private String baseUrl;
 
-    private URI buildTrendingURI(String route){
-        return UriComponentsBuilder.fromUriString(baseUrl + route)
+    private URI buildTrendingURI(String route, String page){
+        return UriComponentsBuilder.fromUriString(baseUrl + route + "?page=" + page)
                 .queryParam("api_key", apiKey)
                 .build()
                 .toUri();
@@ -41,10 +41,10 @@ public class MovieService {
     }
 
     @Cacheable("trendingMovies")
-    public ResponseEntity<Object> getTrendingMovies() {
+    public ResponseEntity<Object> getTrendingMovies(String page) {
         RestTemplate restTemplate = new RestTemplate();
 
-        URI uri = buildTrendingURI("/trending/movie/week");
+        URI uri = buildTrendingURI("/trending/movie/week", page);
 
         try {
             // Get response as a Map (which will be serialized to JSON automatically)
@@ -58,10 +58,10 @@ public class MovieService {
     }
 
     @Cacheable("trendingShows")
-    public ResponseEntity<Object> getTrendingShows(){
+    public ResponseEntity<Object> getTrendingShows(String page){
         RestTemplate restTemplate = new RestTemplate();
 
-        URI uri = buildTrendingURI("/trending/tv/week");
+        URI uri = buildTrendingURI("/trending/tv/week", page);
 
         try {
             Map<String, Object> response = restTemplate.getForObject(uri, Map.class);

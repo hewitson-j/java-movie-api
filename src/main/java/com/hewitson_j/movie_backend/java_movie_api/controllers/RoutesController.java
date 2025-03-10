@@ -23,13 +23,15 @@ public class RoutesController {
     }
 
     @GetMapping("/trending/movies")
-    public ResponseEntity<Object> getTrendingMovies(){
-        return movieService.getTrendingMovies();
+    public ResponseEntity<Object> getTrendingMovies(
+            @RequestParam(value = "page", defaultValue = "1") String page){
+        return movieService.getTrendingMovies(page);
     }
 
     @GetMapping("/trending/tv")
-    public ResponseEntity<Object> getTrendingTv(){
-        return movieService.getTrendingShows();
+    public ResponseEntity<Object> getTrendingTv(
+            @RequestParam(value = "page", defaultValue = "1") String page){
+        return movieService.getTrendingShows(page);
     }
 
     @GetMapping("/search/movie/{id}")
