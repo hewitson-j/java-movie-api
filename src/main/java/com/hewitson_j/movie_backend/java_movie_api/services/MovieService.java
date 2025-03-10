@@ -33,8 +33,8 @@ public class MovieService {
                 .toUri();
     }
 
-    private URI buildSearchByTitle(String route, String title){
-        return UriComponentsBuilder.fromUriString(baseUrl + route + title)
+    private URI buildSearchByTitle(String route, String title, String page){
+        return UriComponentsBuilder.fromUriString(baseUrl + route + title + "&page=" + page)
                 .queryParam("api_key", apiKey)
                 .build()
                 .toUri();
@@ -106,10 +106,10 @@ public class MovieService {
     }
 
     @Cacheable("searchMoviesByTitle")
-    public ResponseEntity<Object> getSearchMovieByTitle(String title){
+    public ResponseEntity<Object> getSearchMovieByTitle(String title, String page){
         RestTemplate restTemplate = new RestTemplate();
 
-        URI uri = buildSearchByTitle("/search/movie?query=", title);
+        URI uri = buildSearchByTitle("/search/movie?query=", title, page);
 
         try {
             Map<String, Object> response = restTemplate.getForObject(uri, Map.class);
@@ -122,10 +122,10 @@ public class MovieService {
     }
 
     @Cacheable("searchTvByTitle")
-    public ResponseEntity<Object> getSearchTvByTitle(String title){
+    public ResponseEntity<Object> getSearchTvByTitle(String title, String page){
         RestTemplate restTemplate = new RestTemplate();
 
-        URI uri = buildSearchByTitle("/search/tv?query=", title);
+        URI uri = buildSearchByTitle("/search/tv?query=", title, page);
 
         try {
             Map<String, Object> response = restTemplate.getForObject(uri, Map.class);

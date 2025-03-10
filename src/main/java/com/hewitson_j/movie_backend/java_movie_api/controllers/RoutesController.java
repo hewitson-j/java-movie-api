@@ -43,12 +43,17 @@ public class RoutesController {
     }
 
     @GetMapping("/search/movies")
-    public ResponseEntity<Object> searchMoviesByTitle(@RequestParam("title") String title){;
-        return movieService.getSearchMovieByTitle(title);
+    public ResponseEntity<Object> searchMoviesByTitle(
+            @RequestParam("title") String title,
+            @RequestParam(value = "page", defaultValue = "1") String page){;
+
+        return movieService.getSearchMovieByTitle(title, page);
     }
 
     @GetMapping("/search/tv")
-    public ResponseEntity<Object> searchTvByTitle(@RequestParam("title") String title){;
-        return movieService.getSearchTvByTitle(title);
+    public ResponseEntity<Object> searchTvByTitle(
+            @RequestParam("title") String title,
+            @RequestParam(value = "page", defaultValue = "1") String page){;
+        return movieService.getSearchTvByTitle(title, page);
     }
 }
