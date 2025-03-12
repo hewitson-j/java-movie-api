@@ -12,6 +12,7 @@
 	<artifactId>java-movie-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>java-movie-api</name>
+	<packaging>jar</packaging>
 	<description>Movie API for hewitson-j.github.io/movie-app-frontend/</description>
 	<url/>
 	<licenses>
