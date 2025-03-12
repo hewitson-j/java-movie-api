@@ -1,7 +1,6 @@
 package com.hewitson_j.movie_backend.java_movie_api.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.*;
@@ -24,7 +23,11 @@ public class MovieService {
     private String baseUrl;
 
     private static final Logger logger = Logger.getLogger(MovieService.class.getName());
+    private static void logErrorUri(URI uri, String errorMessage){
+        logger.severe("Request failed for " + uri + ": " + errorMessage);
+    }
 
+//    URI formatting methods
     private URI buildTrendingURI(String route, String page){
         return UriComponentsBuilder.fromUriString(baseUrl + route + "?page=" + page)
                 .queryParam("api_key", apiKey)
@@ -46,6 +49,7 @@ public class MovieService {
                 .toUri();
     }
 
+//    Route Handler Methods
     @Cacheable("trendingMovies")
     public ResponseEntity<Object> getTrendingMovies(String page) {
         RestTemplate restTemplate = new RestTemplate();
@@ -58,13 +62,12 @@ public class MovieService {
             return ResponseEntity.ok(response);
 
         } catch (HttpClientErrorException e){
-            logger.severe("Request failed for " + uri);
+            logErrorUri(uri, e.getMessage());
             return catchHttpClientErrorException(e);
         }
         catch (RestClientException e) {
-            logger.severe("Request failed for " + uri);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch data from TMDb"));
+            logErrorUri(uri, e.getMessage());
+            return catchRestClientException(e);
         }
     }
 
@@ -79,13 +82,12 @@ public class MovieService {
             return ResponseEntity.ok(response);
         }
         catch (HttpClientErrorException e){
-            logger.severe("Request failed for " + uri);
+            logErrorUri(uri, e.getMessage());
             return catchHttpClientErrorException(e);
         }
         catch (RestClientException e) {
-            logger.severe("Request failed for " + uri);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch data from TMDb"));
+            logErrorUri(uri, e.getMessage());
+            return catchRestClientException(e);
         }
     }
 
@@ -100,13 +102,12 @@ public class MovieService {
             return ResponseEntity.ok(response);
         }
         catch (HttpClientErrorException e){
-            logger.severe("Request failed for " + uri);
+            logErrorUri(uri, e.getMessage());
             return catchHttpClientErrorException(e);
         }
         catch (RestClientException e) {
-            logger.severe("Request failed for " + uri);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch data for Movie " + id + " from TMDb"));
+            logErrorUri(uri, e.getMessage());
+            return catchRestClientException(e);
         }
     }
 
@@ -121,13 +122,12 @@ public class MovieService {
             return ResponseEntity.ok(response);
         }
         catch (HttpClientErrorException e){
-            logger.severe("Request failed for " + uri);
+            logErrorUri(uri, e.getMessage());
             return catchHttpClientErrorException(e);
         }
         catch (RestClientException e) {
-            logger.severe("Request failed for " + uri);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch data for TV " + id + " from TMDb"));
+            logErrorUri(uri, e.getMessage());
+            return catchRestClientException(e);
         }
     }
 
@@ -142,13 +142,12 @@ public class MovieService {
             return ResponseEntity.ok(response);
         }
         catch (HttpClientErrorException e){
-            logger.severe("Request failed for " + uri);
+            logErrorUri(uri, e.getMessage());
             return catchHttpClientErrorException(e);
         }
         catch (RestClientException e) {
-            logger.severe("Request failed for " + uri);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch data for movie query from TMDb"));
+            logErrorUri(uri, e.getMessage());
+            return catchRestClientException(e);
         }
     }
 
@@ -163,16 +162,16 @@ public class MovieService {
             return ResponseEntity.ok(response);
         }
         catch (HttpClientErrorException e){
-            logger.severe("Request failed for " + uri);
+            logErrorUri(uri, e.getMessage());
             return catchHttpClientErrorException(e);
         }
         catch (RestClientException e) {
-            logger.severe("Request failed for " + uri);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to fetch data for TV query from TMDb"));
+            logErrorUri(uri, e.getMessage());
+            return catchRestClientException(e);
         }
     }
 
+//    Error handling methods
     private ResponseEntity<Object> catchHttpClientErrorException(HttpClientErrorException e) {
         HttpStatusCode statusCode = e.getStatusCode();
         String statusMessage = "Unknown error";
@@ -191,5 +190,13 @@ public class MovieService {
                 "status", statusCode.value(),
                 "message", statusMessage,
                 "success", false));
+    }
+
+    private ResponseEntity<Object> catchRestClientException(RestClientException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of(
+                        "error", "Failed to fetch data from TMDb",
+                        "message", e.getMessage()
+                ));
     }
 }
