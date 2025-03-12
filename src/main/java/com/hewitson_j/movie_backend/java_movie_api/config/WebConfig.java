@@ -11,8 +11,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry){
         registry.addMapping("/**").allowedOrigins(
                 "http://localhost:5173",
-                "https://hewitson-j.github.io/movie-app-frontend/",
-                "http://hewitson-j.github.io/movie-app-frontend/")
+                "https://hewitson-j.github.io",
+                "http://hewitson-j.github.io")
                 .allowedMethods("GET")
                 .maxAge(3600);
     }
