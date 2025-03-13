@@ -22,7 +22,7 @@ public class RoutesController {
         return "This is a successful route";
     }
 
-    @GetMapping("/trending/movies")
+    @GetMapping("/trending/movie")
     public ResponseEntity<Object> getTrendingMovies(
             @RequestParam(value = "page", defaultValue = "1") String page){
         return movieService.getTrendingMovies(page);
