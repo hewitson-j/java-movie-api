@@ -44,10 +44,10 @@ public class RoutesController {
         return movieService.getSearchTvById(id);
     }
 
-    @GetMapping("/search/movies")
+    @GetMapping("/search/movie")
     public ResponseEntity<Object> searchMoviesByTitle(
             @RequestParam("title") String title,
-            @RequestParam(value = "page", defaultValue = "1") String page){;
+            @RequestParam(value = "page", defaultValue = "1") String page){
 
         return movieService.getSearchMovieByTitle(title, page);
     }
